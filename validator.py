@@ -20,3 +20,7 @@ class PasswordValidator(Validator):
         pass
 
 
+if __name__ == '__main__':
+    silly_password = 'qwerty123'
+    my_validator = PasswordValidator(silly_password)
+    print(my_validator.is_valid())
