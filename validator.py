@@ -12,6 +12,17 @@ class Validator(ABC):
         pass
 
 
+class LengthValidator(Validator):
+
+    def __init__(self, text):
+        self.text = text
+
+    def is_valid(self):
+        if len(self.text) >= 8:
+            return True
+        return False
+
+
 class PasswordValidator(Validator):
     def __init__(self, password):
         self.password = password
