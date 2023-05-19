@@ -13,11 +13,18 @@ class Validator(ABC):
 
 
 class PasswordValidator(Validator):
-    def __init__(self, text):
-        pass
+    def __init__(self, password):
+        self.password = password
+        self.validators = [
+            LengthValidator
+        ]
 
     def is_valid(self):
-        pass
+        validation_list = []
+        for class_name in self.validators:
+            validator = class_name(self.password)
+            validation_list.append(validator.is_valid())
+        return all(validation_list)
 
 
 if __name__ == '__main__':
