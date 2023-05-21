@@ -60,6 +60,17 @@ class HasUpperCaseValidator(Validator):
         return False
 
 
+class HasLowerCaseValidator(Validator):
+    def __init__(self, text):
+        self.text = text
+
+    def is_valid(self):
+        for char in self.text:
+            if char.islower():
+                return True
+        return False
+
+
 class PasswordValidator(Validator):
     def __init__(self, password):
         self.password = password
@@ -67,7 +78,8 @@ class PasswordValidator(Validator):
             LengthValidator,
             HasNumberValidator,
             HasSpecialCharacterValidator,
-            HasUpperCaseValidator
+            HasUpperCaseValidator,
+            HasLowerCaseValidator
         ]
 
     def is_valid(self):
