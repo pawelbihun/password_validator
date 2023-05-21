@@ -49,13 +49,25 @@ class HasSpecialCharacterValidator(Validator):
         return False
 
 
+class HasUpperCaseValidator(Validator):
+    def __init__(self, text):
+        self.text = text
+
+    def is_valid(self):
+        for char in self.text:
+            if char.isupper():
+                return True
+        return False
+
+
 class PasswordValidator(Validator):
     def __init__(self, password):
         self.password = password
         self.validators = [
             LengthValidator,
             HasNumberValidator,
-            HasSpecialCharacterValidator
+            HasSpecialCharacterValidator,
+            HasUpperCaseValidator
         ]
 
     def is_valid(self):
@@ -67,6 +79,6 @@ class PasswordValidator(Validator):
 
 
 if __name__ == '__main__':
-    silly_password = 'qwerty123!'
+    silly_password = 'qwerty123!A'
     my_validator = PasswordValidator(silly_password)
     print(my_validator.is_valid())
