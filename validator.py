@@ -23,11 +23,24 @@ class LengthValidator(Validator):
         return False
 
 
+class HasNumberValidator(Validator):
+    def __init__(self, text):
+        self.text = text
+
+    def is_valid(self):
+        numbers = [str(i) for i in range(0, 10)]
+        for char in self.text:
+            if char in numbers:
+                return True
+        return False
+
+
 class PasswordValidator(Validator):
     def __init__(self, password):
         self.password = password
         self.validators = [
-            LengthValidator
+            LengthValidator,
+            HasNumberValidator
         ]
 
     def is_valid(self):
