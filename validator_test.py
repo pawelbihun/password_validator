@@ -1,7 +1,7 @@
 """Tests of Validators"""
 
 from validator import PasswordValidator, LengthValidator, HasNumberValidator, HasSpecialCharacterValidator, \
-    HasUpperCaseValidator
+    HasUpperCaseValidator, HasLowerCaseValidator
 
 
 def test_password_validator_constructor():
@@ -55,4 +55,16 @@ def test_has_uppercase_validator_no_uppercase():
 def test_has_uppercase_validator_with_uppercase():
     passwd = 'abcD'
     validator = HasUpperCaseValidator(passwd)
+    assert validator.is_valid() is True
+
+
+def test_has_lowercase_validator_no_lowercase():
+    passwd = 'ABCD'
+    validator = HasLowerCaseValidator(passwd)
+    assert validator.is_valid() is False
+
+
+def test_has_lowercase_validator_with_lowercase():
+    passwd = 'ABCd'
+    validator = HasLowerCaseValidator(passwd)
     assert validator.is_valid() is True
