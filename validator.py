@@ -1,5 +1,10 @@
 """Main modul for validating passwords"""
+import logging
 from abc import ABC, abstractmethod
+from hashlib import sha1
+from functools import cache
+from json import JSONDecodeError
+from requests import get
 
 
 class Validator(ABC):
@@ -73,10 +78,37 @@ class HasLowerCaseValidator(Validator):
 
 class HaveIbeenPwndValidator(Validator):
     def __init__(self, text):
-        pass
+        self.url = "https://api.pwnedpasswords.com/range/"
+        self.hash_prefix = None
+        self.hash = None
+        self.compromised_list = []
+        self.text = text
+
+    def get_hash(self):
+        self.hash = sha1(self.text.encode()).hexdigest().upper()
+
+    def get_hash_prefix(self):
+        try:
+            if self.hash is not None:
+                self.hash_prefix = self.hash[:5]
+        except TypeError:
+            logging.ERROR('Hasn\'t hash set')
+
+    @cache
+    def get_compromised_passwords(self):
+        try:
+            with get(f"{self.url}{self.hash_prefix}") as res:
+                self.compromised_list = res.text.splitlines()
+
+        except JSONDecodeError:
+            logging.error("Encode request!")
 
     def is_valid(self):
-        pass
+        for line in self.compromised_list:
+            if line.split(':')[0] == self.hash[5:]:
+                return False
+
+        return True
 
 
 class PasswordValidator(Validator):
@@ -87,7 +119,8 @@ class PasswordValidator(Validator):
             HasNumberValidator,
             HasSpecialCharacterValidator,
             HasUpperCaseValidator,
-            HasLowerCaseValidator
+            HasLowerCaseValidator,
+            HaveIbeenPwndValidator
         ]
 
     def is_valid(self):
