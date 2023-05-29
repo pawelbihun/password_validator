@@ -104,6 +104,9 @@ class HaveIbeenPwndValidator(Validator):
             logging.error("Encode request!")
 
     def is_valid(self):
+        self.get_hash()
+        self.get_hash_prefix()
+        self.get_compromised_passwords()
         for line in self.compromised_list:
             if line.split(':')[0] == self.hash[5:]:
                 return False
@@ -126,12 +129,15 @@ class PasswordValidator(Validator):
     def is_valid(self):
         validation_list = []
         for class_name in self.validators:
+            print(f'{class_name} is valid: ', end='')
             validator = class_name(self.password)
-            validation_list.append(validator.is_valid())
+            is_valid = validator.is_valid()
+            print(is_valid)
+            validation_list.append(is_valid)
         return all(validation_list)
 
 
 if __name__ == '__main__':
-    silly_password = 'qwerty123!A'
+    silly_password = 'Qwerty1!'
     my_validator = PasswordValidator(silly_password)
     print(my_validator.is_valid())
