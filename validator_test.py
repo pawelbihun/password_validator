@@ -103,4 +103,16 @@ def test_have_i_been_pwnd_validator_get_compromised_passwords(requests_mock):
     requests_mock.get("https://api.pwnedpasswords.com/range/5CEC1", text=data)
     validator.get_compromised_passwords()
     print(validator.compromised_list)
-    assert validator.compromised_list == ['756F96B67B15398E4F92E4310AE47291B93:1', '75B165E3D5E62C9E13CE848EF6FEAC81BFF:4765255']
+    assert validator.compromised_list == ['756F96B67B15398E4F92E4310AE47291B93:1',
+                                          '75B165E3D5E62C9E13CE848EF6FEAC81BFF:4765255']
+
+
+def test_have_i_been_pwnd_validator_is_valid(requests_mock):
+    data = '756F96B67B15398E4F92E4310AE47291B93:1\n75B165E3D5E62C9E13CE848EF6FEAC81BFF:4765255'
+    passwd = 'qwerty123'
+    validator = HaveIbeenPwndValidator(passwd)
+    validator.get_hash()
+    validator.get_hash_prefix()
+    requests_mock.get("https://api.pwnedpasswords.com/range/5CEC1", text=data)
+    validator.get_compromised_passwords()
+    assert validator.is_valid() is False
