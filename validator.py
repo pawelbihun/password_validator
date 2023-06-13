@@ -138,6 +138,6 @@ class PasswordValidator(Validator):
 
 
 if __name__ == '__main__':
-    silly_password = 'Qwerty1!'
-    my_validator = PasswordValidator(silly_password)
+    password = 'Qwerty1!'
+    my_validator = PasswordValidator(password)
     print(my_validator.is_valid())
